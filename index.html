@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Be My Valentine</title>
-
 <style>
 body {
   margin: 0;
@@ -46,6 +45,15 @@ body {
 h1 {
   font-size: 28px;
   margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+#pleadingText {
+  font-size: 16px;
+  color: #ff1744;
+  margin-top: 10px;
+  min-height: 24px;
+  font-weight: bold;
 }
 
 .teddy {
@@ -85,6 +93,11 @@ button {
   top: 60px;
   transform: translateX(-50%);
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -96,8 +109,8 @@ button {
 
 <div class="container">
   <div class="teddy">🧸💖</div>
-  <h1>Rahma will you be my Valentine?</h1>
-
+  <h1>Rahma, will you be my Valentine?</h1>
+  <p id="pleadingText"></p>
   <div class="buttons">
     <button id="yesBtn">Yes 💕</button>
     <button id="noBtn">No 😢</button>
@@ -108,6 +121,34 @@ button {
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const music = document.getElementById("bgMusic");
+const pleadingText = document.getElementById("pleadingText");
+
+let noCount = 0;
+let yesSize = 18;
+let noSize = 18;
+
+const pleadingMessages = [
+  "Are you sure? 🥺",
+  "Really? But I got you virtual flowers! 💐",
+  "Please? I'll buy you pizza! 🍕",
+  "Come on, the teddy is crying now! 😭🧸",
+  "I'm literally on my knees here! 🧎",
+  "My mom already told her friends... 😳",
+  "I already changed my relationship status! 💔",
+  "The universe will be sad... 🌌😢",
+  "Even the floating hearts are judging you! 💗👀",
+  "PLEEEEEEASE? I'm begging! 🙏🙏🙏",
+  "I'll do the dishes for a month! 🍽️",
+  "Fine, TWO months of dishes! 😤",
+  "I already reserved a table at... my kitchen! 🍝",
+  "The No button is literally running away from you!",
+  "This is the saddest day of my life 💀",
+  "I'M NOT CRYING, YOU'RE CRYING! 😭😭😭",
+  "Okay but why are you still clicking No though? 🤨",
+  "The Yes button is getting SO BIG! Can't miss it now! 👀",
+  "I WILL FOLLOW YOU TO THE ENDS OF THE EARTH! 🌍",
+  "Just click Yes already! My finger hurts! 👆😫"
+];
 
 /* Start music on first interaction */
 document.body.addEventListener("click", () => {
@@ -117,17 +158,41 @@ document.body.addEventListener("click", () => {
 /* Dramatic No Button */
 noBtn.addEventListener("mouseover", moveButton);
 noBtn.addEventListener("touchstart", moveButton);
+noBtn.addEventListener("click", moveButton);
 
 function moveButton() {
+  noCount++;
+  
+  // Grow Yes button
+  yesSize += 10;
+  yesBtn.style.fontSize = yesSize + "px";
+  yesBtn.style.padding = (12 + noCount * 2) + "px " + (28 + noCount * 3) + "px";
+  
+  // Shrink No button
+  noSize = Math.max(8, noSize - 2);
+  noBtn.style.fontSize = noSize + "px";
+  noBtn.style.padding = Math.max(4, 12 - noCount) + "px " + Math.max(10, 28 - noCount * 2) + "px";
+  
+  // Show pleading message
+  const messageIndex = Math.min(noCount - 1, pleadingMessages.length - 1);
+  pleadingText.textContent = pleadingMessages[messageIndex];
+  
+  // Move button to random position
   const x = Math.random() * (window.innerWidth - 100);
   const y = Math.random() * (window.innerHeight - 100);
-
   noBtn.style.position = "fixed";
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
-
   noBtn.style.transform = "rotate(" + (Math.random()*360) + "deg)";
-  noBtn.style.background = "#ffb3c1";
+  
+  // Change color randomly
+  const colors = ["#ffb3c1", "#ff9999", "#ffccdd", "#ffa6c9"];
+  noBtn.style.background = colors[Math.floor(Math.random() * colors.length)];
+  
+  // Make No button almost disappear after many attempts
+  if (noCount > 10) {
+    noBtn.style.opacity = Math.max(0.3, 1 - (noCount - 10) * 0.1);
+  }
 }
 
 /* Yes Button Click */
@@ -143,9 +208,16 @@ yesBtn.addEventListener("click", () => {
       color:white;
       font-size:30px;
       text-align:center;
+      padding: 20px;
       animation: fadeIn 1s ease-in-out;">
-      <div style="font-size:80px;">💖💍💖</div>
-      Yaaay!!! You made me the happiest person alive!
+      <div style="font-size:100px; margin-bottom: 20px;">🎉💖✨</div>
+      <div style="font-size:40px; margin-bottom: 10px;">YAAAY!!!</div>
+      <div>I knew you couldn't resist! 😄</div>
+      <div style="font-size:20px; margin-top: 20px;">You made me the happiest person alive! 💕</div>
+      <div style="font-size:80px; margin-top: 30px;">💍👫💖</div>
+      <div style="font-size:18px; margin-top: 20px; opacity: 0.9;">
+        ${noCount > 0 ? `(Only took ${noCount} attempts... but who's counting? 😅)` : '(Smart choice on the first try! 🌟)'}
+      </div>
     </div>
   `;
 });
@@ -159,7 +231,7 @@ function createHeart() {
   heart.style.fontSize = Math.random() * 20 + 15 + "px";
   heart.style.animationDuration = Math.random() * 3 + 4 + "s";
   document.body.appendChild(heart);
-
+  
   setTimeout(() => {
     heart.remove();
   }, 6000);
@@ -170,4 +242,3 @@ setInterval(createHeart, 400);
 
 </body>
 </html>
-
