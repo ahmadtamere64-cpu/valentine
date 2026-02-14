@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Be My Valentine</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #ffe6eb, #ffd1dc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Floating Hearts */
+.heart {
+  position: absolute;
+  font-size: 20px;
+  animation: floatUp 6s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) scale(0.5);
+    opacity: 0;
+  }
+  50% { opacity: 1; }
+  100% {
+    transform: translateY(-10vh) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.teddy {
+  font-size: 80px;
+}
+
+.buttons {
+  margin-top: 30px;
+  position: relative;
+  height: 120px;
+}
+
+button {
+  padding: 12px 28px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  position: absolute;
+}
+
+#yesBtn {
+  background: #ff4d6d;
+  color: white;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#yesBtn:hover {
+  transform: translateX(-50%) scale(1.1);
+}
+
+#noBtn {
+  background: #ccc;
+  left: 50%;
+  top: 60px;
+  transform: translateX(-50%);
+}
+</style>
+</head>
+<body>
+
+<!-- Romantic Background Music -->
+<audio id="bgMusic" loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+</audio>
+
+<div class="container">
+  <div class="teddy">🧸💖</div>
+  <h1>Sara will you be my Valentine?</h1>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes 💕</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const music = document.getElementById("bgMusic");
+
+/* Start music on first interaction */
+document.body.addEventListener("click", () => {
+  music.play().catch(()=>{});
+}, { once: true });
+
+/* Dramatic No Button */
+noBtn.addEventListener("mouseover", moveButton);
+noBtn.addEventListener("touchstart", moveButton);
+
+function moveButton() {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 100);
+
+  noBtn.style.position = "fixed";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  noBtn.style.transform = "rotate(" + (Math.random()*360) + "deg)";
+  noBtn.style.background = "#ffb3c1";
+}
+
+/* Yes Button Click */
+yesBtn.addEventListener("click", () => {
+  document.body.innerHTML = `
+    <div style="
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      background:#ff4d6d;
+      color:white;
+      font-size:30px;
+      text-align:center;
+      animation: fadeIn 1s ease-in-out;">
+      <div style="font-size:80px;">💖💍💖</div>
+      Yaaay!!! You made me the happiest person alive!
+    </div>
+  `;
+});
+
+/* Generate floating hearts */
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerHTML = "💗";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random() * 20 + 15 + "px";
+  heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 6000);
+}
+
+setInterval(createHeart, 400);
+</script>
+
+</body>
+</html>
